@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Student Performance Predictor Pro</title>
+    <!-- Use Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Load Brain.js for Neural Network -->
+    <script src="https://unpkg.com/brain.js"></script>
+    <!-- Load Chart.js for Data Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-grid"></div>
+    <div class="gradient-blob top"></div>
+    <div class="gradient-blob bottom"></div>
+
+    <!-- NEW Splash Screen -->
+    <div id="splashScreen" class="splash-screen">
+        <div class="splash-content">
+            <div class="neural-ring">
+                <i class="fas fa-network-wired"></i>
+            </div>
+            <h1>Project: <span>SYNAPSE</span></h1>
+            <p>AI Student Performance Forecaster</p>
+            <button id="enterSystemBtn" class="btn-glow-large">
+                <i class="fas fa-power-off"></i> Enter Neural Network
+            </button>
+        </div>
+    </div>
+
+    <div class="container" id="mainContainer" style="display: none; opacity: 0;">
+        <header>
+            <div class="header-badge"><i class="fas fa-brain"></i> Machine Learning AI</div>
+            <h1>Student Performance <span>Forecaster</span></h1>
+            <p>Complete with an Actionable Study Plan & Subject Analysis</p>
+        </header>
+
+        <div class="dashboard border-glow">
+            <!-- Column 1: Inputs & Data -->
+            <div class="col-left">
+                <div class="card input-panel glassy">
+                    <h2><i class="fas fa-user-graduate"></i> Student Profiler</h2>
+                    
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="hours">Study Hrs/wk</label>
+                            <input type="number" id="hours" min="0" max="40" value="15">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="attendance">Attend. %</label>
+                            <input type="number" id="attendance" min="0" max="100" value="85">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="cgpa">CGPA (10)</label>
+                            <input type="number" id="cgpa" min="0" max="10" step="0.1" value="7.5">
+                        </div>
+                    </div>
+
+                    <h3 class="section-title">Subject-Wise Marks (0-100)</h3>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label for="math">Math</label>
+                            <input type="number" id="math" min="0" max="100" value="65">
+                        </div>
+                        <div class="input-group">
+                            <label for="science">Science</label>
+                            <input type="number" id="science" min="0" max="100" value="78">
+                        </div>
+                        <div class="input-group">
+                            <label for="english">English</label>
+                            <input type="number" id="english" min="0" max="100" value="82">
+                        </div>
+                    </div>
+                    
+                    <button class="btn-glow" id="predictBtn" disabled>
+                        <i class="fas fa-magic"></i> Initialize Neural Network
+                    </button>
+                    <div id="trainingStatus" class="status-msg"><i class="fas fa-spinner fa-spin"></i> Awaiting User...</div>
+                </div>
+
+                <!-- Training Data viewer -->
+                <div class="card terminal-panel glassy">
+                    <div class="terminal-header">
+                        <div class="dots"><span></span><span></span><span></span></div>
+                        <div class="title">Dataset & Training Log</div>
+                    </div>
+                    <div id="dataLog" class="terminal-body">
+                        > System Ready... Click 'Train dataset' to begin.<br>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2: Results -->
+            <div class="col-right">
+                <div class="card output-panel glassy">
+                    <h2><i class="fas fa-chart-pie"></i> AI Prediction Matrix</h2>
+                    
+                    <div class="prediction-row">
+                        <div class="prediction-circle tooltip" data-tooltip="Predicted final exam score based on standard deviation learned from 300+ historic records">
+                            <svg viewBox="0 0 36 36" class="circular-chart">
+                                <path class="circle-bg"
+                                  d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                                <path class="circle" id="scoreCircle"
+                                  stroke-dasharray="0, 100"
+                                  d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                                <text x="18" y="20.35" class="percentage" id="scoreText">--%</text>
+                            </svg>
+                        </div>
+                        
+                        <!-- AI Study Plan Module -->
+                        <div class="study-plan-box" id="studyPlanBox">
+                            <div class="plan-header">
+                                <h3><i class="fas fa-clipboard-list"></i> AI Study Plan</h3>
+                                <button id="readAloudBtn" class="btn-icon tooltip" data-tooltip="AI Voice Dictation"><i class="fas fa-volume-up"></i></button>
+                            </div>
+                            <p class="plan-subtitle">Personalized steps to improve final score:</p>
+                            <ul id="planList" class="plan-list">
+                                <li class="empty-state">Run a prediction to generate plan</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Panel -->
+                <div class="card chart-panel glassy">
+                    <h2><i class="fas fa-chart-line"></i> Analytics Dashboard</h2>
+                    <p class="chart-desc">How this student compares to historical dataset averages</p>
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating AI Tutor Chatbot -->
+    <div class="chatbot-container">
+        <!-- The Chat window -->
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h3><i class="fas fa-robot"></i> Ask AI Tutor</h3>
+                <button id="closeChatBtn">&times;</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-msg">
+                    Hi! I'm your AI Study Assistant. I am universally connected to the Wikipedia Knowledge Base! Ask me any factual doubt you have right now.
+                </div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Ask your doubt here...">
+                <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        
+        <!-- The button -->
+        <button class="chat-toggle-btn" id="chatToggleBtn">
+            <i class="fas fa-comment-dots"></i> Ask AI Tutor
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
