@@ -221,3 +221,15 @@ This project demonstrates an end-to-end browser-based machine-learning workflow 
 **Mayank Pandey**
 
 Computer Science Student | AI/ML Enthusiast
+
+### 🏔️ Project SYNAPSE
+
+![Project SYNAPSE](./screenshots/project-synapse.png)
+
+### 📊 Student Performance Dashboard
+
+![Student Performance Dashboard](./screenshots/student-dashboard.png)
+
+### 🤖 AI Prediction Interface
+
+![AI Prediction Interface](./screenshots/ai-prediction.png)
